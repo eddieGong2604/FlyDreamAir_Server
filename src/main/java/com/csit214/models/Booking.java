@@ -1,6 +1,4 @@
 package com.csit214.models;
-
-
 import javax.persistence.*;
 
 @Entity
@@ -9,17 +7,19 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-
     private double bookingPrice;
 
     @ManyToOne
     @JoinColumn(name = "seating_number")
-
     private Seating seating;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
     private FrequentFlyerAccount account;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "voucher_id", referencedColumnName = "voucherId")
+    private Voucher voucher;
 
 
     public Booking() {
@@ -31,6 +31,14 @@ public class Booking {
 
     public Long getBookingId() {
         return bookingId;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
     }
 
     public void setBookingId(Long bookingId) {

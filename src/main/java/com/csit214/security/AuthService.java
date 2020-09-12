@@ -28,34 +28,33 @@ public class AuthService {
         String username = loginRequest.getUsername();
         FrequentFlyerAccount user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found with email " + username));
 
-        Boolean accessTokenValid = !accessToken.isEmpty() && tokenProvider.validateToken(accessToken);
-        Boolean refreshTokenValid = !refreshToken.isEmpty() && tokenProvider.validateToken(refreshToken);
-
+        Boolean accessTokenValid = tokenProvider.validateToken(accessToken);
+        Boolean refreshTokenValid = tokenProvider.validateToken(refreshToken);
+        System.out.println(accessTokenValid);
+        System.out.println(refreshTokenValid);
         HttpHeaders responseHeaders = new HttpHeaders();
         Token newAccessToken;
         Token newRefreshToken;
-        if (!accessTokenValid && !refreshTokenValid) {
+        if (accessToken == null && refreshToken == null) {
+            newAccessToken = tokenProvider.generateAccessToken(authentication);
+            newRefreshToken = tokenProvider.generateRefreshToken(authentication);
+            addAccessTokenCookie(responseHeaders, newAccessToken);
+            addRefreshTokenCookie(responseHeaders, newRefreshToken);
+        } else if (!accessTokenValid && !refreshTokenValid) {
+            JwtAuthenticationResponse loginResponse = new JwtAuthenticationResponse(AuthStatus.FAILURE, "Session expired. Please Login Again.");
+            return ResponseEntity.status(440).headers(responseHeaders).body(loginResponse);
+        } else if (!accessTokenValid) {
+            System.out.println("access token invald;");
+            newAccessToken = tokenProvider.generateAccessToken(authentication);
+            addAccessTokenCookie(responseHeaders, newAccessToken);
+        } else if (refreshTokenValid) {
             newAccessToken = tokenProvider.generateAccessToken(authentication);
             newRefreshToken = tokenProvider.generateRefreshToken(authentication);
             addAccessTokenCookie(responseHeaders, newAccessToken);
             addRefreshTokenCookie(responseHeaders, newRefreshToken);
         }
-
-        if (!accessTokenValid && refreshTokenValid) {
-            newAccessToken = tokenProvider.generateAccessToken(authentication);
-            addAccessTokenCookie(responseHeaders, newAccessToken);
-        }
-
-        if (accessTokenValid && refreshTokenValid) {
-            newAccessToken = tokenProvider.generateAccessToken(authentication);
-            newRefreshToken = tokenProvider.generateRefreshToken(authentication);
-            addAccessTokenCookie(responseHeaders, newAccessToken);
-            addRefreshTokenCookie(responseHeaders, newRefreshToken);
-        }
-
         JwtAuthenticationResponse loginResponse = new JwtAuthenticationResponse(AuthStatus.SUCCESS, "Auth successful. Tokens are created in cookie.");
         return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
-
     }
 
     public ResponseEntity<JwtAuthenticationResponse> refresh(String accessToken, String refreshToken, Authentication authentication) {
@@ -70,7 +69,6 @@ public class AuthService {
 
         JwtAuthenticationResponse loginResponse = new JwtAuthenticationResponse(AuthStatus.SUCCESS, "Auth successful. Tokens are created in cookie.");
         return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
-
     }
 
  /*   @Override

@@ -20,16 +20,26 @@ public class Voucher {
     private LocalDateTime validDate;
     private boolean isValid;
 
+    @OneToOne(mappedBy = "voucher")
+    private Booking booking;
+
     public Voucher() {
 
     }
 
-    public Voucher(String voucherCode, FrequentFlyerAccount account, double discount, LocalDateTime validDate, boolean isValid) {
+    public Voucher(String voucherCode, double discount, LocalDateTime validDate, boolean isValid) {
         this.voucherCode = voucherCode;
-        this.account = account;
         this.discount = discount;
         this.validDate = validDate;
         this.isValid = isValid;
+    }
+
+    public Booking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
     }
 
     public Long getVoucherId() {
