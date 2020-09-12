@@ -37,7 +37,6 @@ public class BookingController {
     private UserRepository userRepository;
 
     @PostMapping("/me")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> makeBooking(@RequestBody BookingRequest bookingRequest, @CurrentUser UserPrincipal currentUser) {
         Seating seating = seatingRepository.findById(bookingRequest.getSeatingId()).orElse(null);
 
@@ -89,7 +88,6 @@ public class BookingController {
 
 
     @PostMapping("/voucher")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> makeVoucher(@RequestBody VoucherCreateRequest voucherCreateRequest, @CurrentUser UserPrincipal currentUser) {
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
         if(voucherCreateRequest.getPoints() >=100 && voucherCreateRequest.getPoints() <= account.getFfpoints()){
