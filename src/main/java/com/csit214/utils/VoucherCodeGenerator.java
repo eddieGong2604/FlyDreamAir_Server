@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 public class VoucherCodeGenerator {
 
     @Autowired
-    private VoucherRepository voucherRepository;
+    private static VoucherRepository voucherRepository;
     private static final String prefix = "VOUCHER";
 
-    public String genVoucherCode() {
+    public static String genVoucherCode() {
         int counter = voucherRepository.findAll().size();
         return prefix + counter;
     }

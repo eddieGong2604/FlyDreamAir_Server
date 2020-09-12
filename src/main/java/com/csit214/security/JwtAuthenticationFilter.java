@@ -34,11 +34,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = getJwtToken(request, true);
-
+            String jwt;
+            if(getJwtFromCookie(request) == null){
+                jwt = getJwtFromRequest(request);
+            }
+            else{
+                jwt = getJwtFromCookie(request);
+            }
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-
+                System.out.println(userId);
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -52,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+    public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
@@ -60,23 +65,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private String getJwtFromCookie(HttpServletRequest request) {
+    public String getJwtFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (accessTokenCookieName.equals(cookie.getName())) {
+
+                    return (cookie.getValue());
+                }
+            }
+            return null;
+        } else {
             return null;
         }
-        for (Cookie cookie : cookies) {
-            if (accessTokenCookieName.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
-
-    private String getJwtToken(HttpServletRequest request, boolean fromCookie) {
-        if (fromCookie)
-            return getJwtFromCookie(request);
-
-        return getJwtFromRequest(request);
     }
 }

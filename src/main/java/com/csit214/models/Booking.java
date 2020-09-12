@@ -1,4 +1,5 @@
 package com.csit214.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private FrequentFlyerAccount account;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -28,8 +30,11 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(double bookingPrice) {
+    public Booking(double bookingPrice, Seating seating, FrequentFlyerAccount account, @Nullable Voucher voucher) {
         this.bookingPrice = bookingPrice;
+        this.seating = seating;
+        this.account = account;
+        this.voucher = voucher;
     }
 
     public Long getBookingId() {
@@ -70,6 +75,10 @@ public class Booking {
 
     public void setAccount(FrequentFlyerAccount account) {
         this.account = account;
+    }
+
+    public void applyVoucherCode(Voucher voucher, Seating seating){
+        this.bookingPrice = seating.getPrice()*(1 - voucher.getDiscount());
     }
 
 }
