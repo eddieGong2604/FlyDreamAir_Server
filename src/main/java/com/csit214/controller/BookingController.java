@@ -44,25 +44,27 @@ public class BookingController {
         Long userId = currentUser.getId();
         Seating seating = seatingRepository.findById(seatingId).orElse(null);
         Voucher voucher = voucherRepository.findByVoucherCode(voucherCode).orElse(null);
-        if (voucher == null || !voucher.isValid()) {
-            return new ResponseEntity(new ApiResponse(false, "Voucher code is invalid!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-        else{
-            voucher.setValid(false);
-            voucherRepository.save(voucher);
-        }
         FrequentFlyerAccount account = userRepository.findById(userId).orElse(null);
 
         Booking booking = new Booking(seating.getPrice() * 10.0 / 100);
+        if(voucher != null){
+            booking.setVoucher(voucher);
+        }
+        if (!voucher.isValid()) {
+            return new ResponseEntity(new ApiResponse(false, "Voucher code is invalid!"),
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            voucher.setValid(false);
+            voucherRepository.save(voucher);
+        }
+
         booking.setAccount(account);
         booking.setSeating(seating);
-        booking.setVoucher(voucher);
 
         Set<Booking> userBooking = account.getBookings();
         userBooking.add(booking);
         account.setBookings(userBooking);
-        account.setFfpoints(account.getFfpoints() + 10);
+        account.setFfpoints(account.getFfpoints() + booking.getBookingPrice()*10/100);
 
         bookingRepository.save(booking);
         userRepository.save(account);

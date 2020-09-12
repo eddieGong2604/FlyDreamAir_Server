@@ -21,7 +21,7 @@ public class FrequentFlyerAccount {
     private String name;
     private String username;
     private String password;
-    private int ffpoints;
+    private double ffpoints;
 
     @Enumerated(EnumType.STRING)
     private FFType status;
@@ -43,7 +43,7 @@ public class FrequentFlyerAccount {
 
     }
 
-    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, int ffpoints, FFType status, double statusDiscountPercent) {
+    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, double ffpoints, FFType status, double statusDiscountPercent) {
         this.name = name;
         this.passportNumber = passportNumber;
         this.username = username;
@@ -117,11 +117,11 @@ public class FrequentFlyerAccount {
         this.password = password;
     }
 
-    public int getFfpoints() {
+    public double getFfpoints() {
         return ffpoints;
     }
 
-    public void setFfpoints(int ffpoints) {
+    public void setFfpoints(double ffpoints) {
         this.ffpoints = ffpoints;
     }
 

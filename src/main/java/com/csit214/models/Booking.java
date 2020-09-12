@@ -1,4 +1,6 @@
 package com.csit214.models;
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,6 +21,7 @@ public class Booking {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "voucher_id", referencedColumnName = "voucherId")
+    @Nullable
     private Voucher voucher;
 
 
