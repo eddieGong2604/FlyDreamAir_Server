@@ -21,11 +21,11 @@ public class FrequentFlyerAccount {
     private String name;
     private String username;
     private String password;
-    private int ffpoints;
+    private double ffpoints;
+    private double statusPoints;
 
     @Enumerated(EnumType.STRING)
     private FFType status;
-    private double statusDiscountPercent = 0.0;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private Set<Voucher> vouchers = new HashSet<>();
@@ -43,14 +43,23 @@ public class FrequentFlyerAccount {
 
     }
 
-    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, int ffpoints, FFType status, double statusDiscountPercent) {
+    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, double ffpoints, FFType status,double statusPoints) {
         this.name = name;
         this.passportNumber = passportNumber;
         this.username = username;
         this.password = password;
         this.ffpoints = ffpoints;
         this.status = status;
-        this.statusDiscountPercent = statusDiscountPercent;
+        this.statusPoints = statusPoints;
+    }
+
+
+    public double getStatusPoints() {
+        return statusPoints;
+    }
+
+    public void setStatusPoints(double statusPoints) {
+        this.statusPoints = statusPoints;
     }
 
     public Long getAccountId() {
@@ -117,11 +126,11 @@ public class FrequentFlyerAccount {
         this.password = password;
     }
 
-    public int getFfpoints() {
+    public double getFfpoints() {
         return ffpoints;
     }
 
-    public void setFfpoints(int ffpoints) {
+    public void setFfpoints(double ffpoints) {
         this.ffpoints = ffpoints;
     }
 
@@ -131,14 +140,6 @@ public class FrequentFlyerAccount {
 
     public void setStatus(FFType status) {
         this.status = status;
-    }
-
-    public double getStatusDiscountPercent() {
-        return statusDiscountPercent;
-    }
-
-    public void setStatusDiscountPercent(double statusDiscountPercent) {
-        this.statusDiscountPercent = statusDiscountPercent;
     }
 
 }

@@ -1,15 +1,24 @@
 package com.csit214.models;
 
 public enum FFType {
-    PLATINUM(10.0),
-    GOLD(10.0),
-    SILVER(10.0);
+    PLATINUM(60.0,500),
+    GOLD(40.0,200),
+    SILVER(10.0,0);
     private double value;
+    private double threshold;
 
-    FFType(double value) {
+    FFType(double value,double threshold) {
         this.value = value;
+        this.threshold = threshold;
     }
 
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
+    }
 
     public double getValue() {
         return value;

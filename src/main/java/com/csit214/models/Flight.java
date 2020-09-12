@@ -3,6 +3,7 @@ package com.csit214.models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "Flight")
@@ -17,6 +18,8 @@ public class Flight {
     private String arriveAirport;
     private LocalDateTime arriveTime;
 
+    @OneToMany(mappedBy = "flight")
+    private Set<Seating> seatingSet;
     public Flight() {
     }
 
@@ -31,6 +34,14 @@ public class Flight {
 
     public Long getFlightId() {
         return flightId;
+    }
+
+    public Set<Seating> getSeatingSet() {
+        return seatingSet;
+    }
+
+    public void setSeatingSet(Set<Seating> seatingSet) {
+        this.seatingSet = seatingSet;
     }
 
     public void setFlightId(Long flightId) {
