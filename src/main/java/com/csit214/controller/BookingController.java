@@ -48,6 +48,11 @@ public class BookingController {
             return new ResponseEntity(new ApiResponse(false, "Voucher name is invalid!"),
                     HttpStatus.BAD_REQUEST);
         }
+        else{
+            voucher.setValid(false);
+            voucherRepository.save(voucher);
+            /*hello world*/
+        }
         FrequentFlyerAccount account = userRepository.findById(userId).orElse(null);
 
         Booking booking = new Booking(seating.getPrice() * 10.0 / 100);
