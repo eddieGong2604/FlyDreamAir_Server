@@ -40,19 +40,17 @@ public class BookingController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> makeBooking(@RequestBody BookingRequest bookingRequest, @CurrentUser UserPrincipal currentUser) {
         Long seatingId = bookingRequest.getSeatingId();
-        Long voucherId = bookingRequest.getVoucherId();
+        String voucherCode = bookingRequest.getVoucherCode();
         Long userId = currentUser.getId();
         Seating seating = seatingRepository.findById(seatingId).orElse(null);
-        Voucher voucher = voucherRepository.findById(voucherId).orElse(null);
-        if (voucher == null) {
-            return new ResponseEntity(new ApiResponse(false, "Voucher name is invalid!"),
+        Voucher voucher = voucherRepository.findByVoucherCode(voucherCode).orElse(null);
+        if (voucher == null || !voucher.isValid()) {
+            return new ResponseEntity(new ApiResponse(false, "Voucher code is invalid!"),
                     HttpStatus.BAD_REQUEST);
         }
         else{
             voucher.setValid(false);
             voucherRepository.save(voucher);
-            /*hello world*/
-            /*hello world*/
         }
         FrequentFlyerAccount account = userRepository.findById(userId).orElse(null);
 

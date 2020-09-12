@@ -2,22 +2,22 @@ package com.csit214.payload;
 
 public class BookingRequest {
     private Long seatingId;
-    private Long voucherId;
+    private String voucherCode;
 
     public BookingRequest() {
 
     }
 
-    public BookingRequest(Long seatingId, Long voucherId) {
+    public BookingRequest(Long seatingId, String voucherCode) {
         this.seatingId = seatingId;
-        this.voucherId = voucherId;
+        this.voucherCode = voucherCode;
     }
 
     public Long getSeatingId() {
         return seatingId;
     }
 
-    public Long getVoucherId() {
-        return voucherId;
+    public String getVoucherCode() {
+        return voucherCode;
     }
 }
