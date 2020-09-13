@@ -78,7 +78,7 @@ public class Booking {
     }
 
     public void applyVoucherCode(Voucher voucher, Seating seating){
-        this.bookingPrice = seating.getPrice()*(1 - voucher.getDiscount());
+        this.bookingPrice = voucher.getDiscount() < 1 ? seating.getPrice()*(1 - voucher.getDiscount()) : 0;
     }
 
 }
