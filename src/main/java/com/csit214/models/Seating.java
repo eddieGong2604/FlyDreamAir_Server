@@ -1,6 +1,8 @@
 package com.csit214.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ public class Seating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seatingId;
     @ManyToOne
+    @JsonIgnore
     private Flight flight;
     private double price;
     @Enumerated(EnumType.STRING)
@@ -18,6 +21,7 @@ public class Seating {
     private int availability;
 
     @OneToMany(mappedBy = "seating")
+    @JsonIgnore
     private Set<Booking> bookingOfSeating;
 
 

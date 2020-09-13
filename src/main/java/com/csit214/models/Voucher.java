@@ -1,10 +1,16 @@
 package com.csit214.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Voucher")
+@Table(name = "Voucher",uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "voucherCode"
+        })
+})
 
 public class Voucher {
     @Id
@@ -14,10 +20,10 @@ public class Voucher {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private FrequentFlyerAccount account;
 
     private double discount;
-    private LocalDateTime validDate;
     private boolean isValid;
 
     @OneToOne(mappedBy = "voucher")
@@ -27,10 +33,9 @@ public class Voucher {
 
     }
 
-    public Voucher(String voucherCode, double discount, LocalDateTime validDate, boolean isValid) {
+    public Voucher(String voucherCode, double discount, boolean isValid) {
         this.voucherCode = voucherCode;
         this.discount = discount;
-        this.validDate = validDate;
         this.isValid = isValid;
     }
 
@@ -72,14 +77,6 @@ public class Voucher {
 
     public void setDiscount(double discount) {
         this.discount = discount;
-    }
-
-    public LocalDateTime getValidDate() {
-        return validDate;
-    }
-
-    public void setValidDate(LocalDateTime validDate) {
-        this.validDate = validDate;
     }
 
     public boolean isValid() {

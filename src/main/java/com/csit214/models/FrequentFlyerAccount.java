@@ -1,5 +1,7 @@
 package com.csit214.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,20 +22,24 @@ public class FrequentFlyerAccount {
     private String passportNumber;
     private String name;
     private String username;
+    @JsonIgnore
     private String password;
-    private int ffpoints;
+    private double ffpoints;
+    private double statusPoints;
 
     @Enumerated(EnumType.STRING)
     private FFType status;
-    private double statusDiscountPercent = 0.0;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Voucher> vouchers = new HashSet<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Booking> bookings = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -43,14 +49,23 @@ public class FrequentFlyerAccount {
 
     }
 
-    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, int ffpoints, FFType status, double statusDiscountPercent) {
+    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, double ffpoints, FFType status, double statusPoints) {
         this.name = name;
         this.passportNumber = passportNumber;
         this.username = username;
         this.password = password;
         this.ffpoints = ffpoints;
         this.status = status;
-        this.statusDiscountPercent = statusDiscountPercent;
+        this.statusPoints = statusPoints;
+    }
+
+
+    public double getStatusPoints() {
+        return statusPoints;
+    }
+
+    public void setStatusPoints(double statusPoints) {
+        this.statusPoints = statusPoints;
     }
 
     public Long getAccountId() {
@@ -117,11 +132,11 @@ public class FrequentFlyerAccount {
         this.password = password;
     }
 
-    public int getFfpoints() {
+    public double getFfpoints() {
         return ffpoints;
     }
 
-    public void setFfpoints(int ffpoints) {
+    public void setFfpoints(double ffpoints) {
         this.ffpoints = ffpoints;
     }
 
@@ -131,14 +146,6 @@ public class FrequentFlyerAccount {
 
     public void setStatus(FFType status) {
         this.status = status;
-    }
-
-    public double getStatusDiscountPercent() {
-        return statusDiscountPercent;
-    }
-
-    public void setStatusDiscountPercent(double statusDiscountPercent) {
-        this.statusDiscountPercent = statusDiscountPercent;
     }
 
 }
