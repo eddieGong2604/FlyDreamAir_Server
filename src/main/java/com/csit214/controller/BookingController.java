@@ -66,8 +66,8 @@ public class BookingController {
             userBooking.add(booking);
             account.setBookings(userBooking);
 
-            double newStatusPoints = booking.getBookingPrice()*10.0/100.0 + account.getStatusPoints();
-            double newFFPoints = account.getFfpoints() + booking.getBookingPrice()*10/100 + account.getStatus().getValue();
+            double newStatusPoints = booking.getBookingPrice()*1.0/25 + account.getStatusPoints();
+            double newFFPoints = account.getFfpoints() + booking.getBookingPrice()*1.0/25 + account.getStatus().getValue();
 
             account.setStatusPoints(newStatusPoints);
             account.setFfpoints(newFFPoints);
