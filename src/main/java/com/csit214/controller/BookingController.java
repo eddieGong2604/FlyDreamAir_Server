@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +35,7 @@ public class BookingController {
     private UserRepository userRepository;
 
     @PostMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> makeBooking(@RequestBody BookingRequest bookingRequest, @CurrentUser UserPrincipal currentUser) {
         Seating seating = seatingRepository.findById(bookingRequest.getSeatingId()).orElse(null);
 
@@ -87,28 +86,13 @@ public class BookingController {
     }
 
 
-    @PostMapping("/voucher")
-    public ResponseEntity<?> makeVoucher(@RequestBody VoucherCreateRequest voucherCreateRequest, @CurrentUser UserPrincipal currentUser) {
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+
+    public Set<Booking> getUserBookings(@CurrentUser UserPrincipal currentUser) {
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
-        if(voucherCreateRequest.getPoints() >=100 && voucherCreateRequest.getPoints() <= account.getFfpoints()){
-
-            Voucher voucher = new Voucher("VOUCHER" + voucherRepository.findAll().size(),voucherCreateRequest.getPoints() / 100,true);
-            voucher.setAccount(account);
-            voucherRepository.save(voucher);
-
-            Set<Voucher> vouchers = account.getVouchers();
-            vouchers.add(voucher);
-            account.setVouchers(vouchers);
-
-            account.setFfpoints(account.getFfpoints() - voucherCreateRequest.getPoints());
-            userRepository.save(account);
-            return new ResponseEntity(new ApiResponse(true, "Your Voucher Code is: " + voucher.getVoucherCode()),
-                    HttpStatus.valueOf(200));
-        }
-        else{
-            return new ResponseEntity(new ApiResponse(false, "Your voucher points is less than 100 or it's greater than your current frequent flyer points"),HttpStatus.BAD_REQUEST);
-        }
-
+        return new HashSet<>(account.getBookings());
     }
+
 
 }

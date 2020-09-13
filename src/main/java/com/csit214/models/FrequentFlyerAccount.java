@@ -1,5 +1,7 @@
 package com.csit214.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +22,7 @@ public class FrequentFlyerAccount {
     private String passportNumber;
     private String name;
     private String username;
+    @JsonIgnore
     private String password;
     private double ffpoints;
     private double statusPoints;
@@ -28,12 +31,15 @@ public class FrequentFlyerAccount {
     private FFType status;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Voucher> vouchers = new HashSet<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Booking> bookings = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -43,7 +49,7 @@ public class FrequentFlyerAccount {
 
     }
 
-    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, double ffpoints, FFType status,double statusPoints) {
+    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, double ffpoints, FFType status, double statusPoints) {
         this.name = name;
         this.passportNumber = passportNumber;
         this.username = username;
