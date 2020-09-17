@@ -18,10 +18,4 @@ public class Csit214Application {
     public static void main(String[] args) {
         SpringApplication.run(Csit214Application.class, args);
     }
-
-    @PostConstruct
-    void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
-
 }

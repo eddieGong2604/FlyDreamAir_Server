@@ -12,9 +12,12 @@ import com.csit214.payload.SignUpRequest;
 import com.csit214.repository.RoleRepository;
 import com.csit214.repository.UserRepository;
 import com.csit214.security.AuthService;
+import com.csit214.security.CurrentUser;
 import com.csit214.security.JwtTokenProvider;
+import com.csit214.security.UserPrincipal;
 import com.csit214.utils.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -70,17 +73,26 @@ public class AuthController {
 
         return authService.login(loginRequest, accessToken, refreshToken, authentication);
     }
+    @GetMapping("/is_logged_in")
+    public ResponseEntity<?> checkIfLoggedIn(@CurrentUser UserPrincipal userPrincipal){
+        if(userPrincipal == null){
+            return new ResponseEntity(new ApiResponse(false, "Not logged In"),
+                    HttpStatus.ACCEPTED);        }
+        else{
+            return new ResponseEntity(new ApiResponse(true, "logged in"),
+                    HttpStatus.ACCEPTED);        }
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.ACCEPTED);
         }
 
         if (userRepository.findByPassportNumber(signUpRequest.getPassportNumber()).isPresent()) {
             return new ResponseEntity(new ApiResponse(false, "Passport number already in use!"),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.ACCEPTED);
         }
 
         // Creating user's account
@@ -110,5 +122,13 @@ public class AuthController {
                                           @CookieValue(name = "refreshToken", required = false) String refreshToken) {
 
         return authService.refresh(accessToken, refreshToken, SecurityContextHolder.getContext().getAuthentication());
+    }
+    @PostMapping(value = "/logout")
+    public  ResponseEntity<?> logout(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.deleteAccessTokenCookie().toString());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.deleteRefreshTokenCookie().toString());
+
+        return ResponseEntity.ok().headers(httpHeaders).body(new ApiResponse(true, "Log out successful"));
     }
 }

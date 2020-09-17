@@ -27,6 +27,7 @@ public class Voucher {
     private boolean isValid;
 
     @OneToOne(mappedBy = "voucher")
+    @JsonIgnore
     private Booking booking;
 
     public Voucher() {

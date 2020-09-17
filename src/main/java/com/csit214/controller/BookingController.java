@@ -80,6 +80,9 @@ public class BookingController {
             }
             bookingRepository.save(booking);
             userRepository.save(account);
+            if(voucher != null){
+                voucherRepository.delete(voucher);
+            }
             return new ResponseEntity(new BookingInfoResponse(booking, initialPrice,bookingRequest.getVoucherCode(),priceAfter),
                     HttpStatus.valueOf(200));
         }

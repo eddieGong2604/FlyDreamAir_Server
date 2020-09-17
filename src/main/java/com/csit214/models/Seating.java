@@ -13,7 +13,6 @@ public class Seating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seatingId;
     @ManyToOne
-    @JsonIgnore
     private Flight flight;
     private double price;
     @Enumerated(EnumType.STRING)

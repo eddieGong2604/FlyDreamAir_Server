@@ -24,8 +24,8 @@ public class SeatingController {
 
     @GetMapping("/flightId={flightId}")
     @PreAuthorize("hasRole('USER')")
-    public Set<Seating> getFlightSeating(@PathVariable Long flightId) {
-        return flightRepository.findById(flightId).orElse(null).getSeatingSet();
+    public Set<Seating> getFlightSeating(@PathVariable String flightId) {
+        return flightRepository.findById(Long.parseLong(flightId)).orElse(null).getSeatingSet();
     }
 
     @GetMapping("/seatingId={seatingId}")

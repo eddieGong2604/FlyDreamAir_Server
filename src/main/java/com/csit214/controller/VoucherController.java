@@ -34,10 +34,21 @@ public class VoucherController {
 
     @PostMapping("/me")
     public ResponseEntity<?> makeVoucher(@RequestBody VoucherCreateRequest voucherCreateRequest, @CurrentUser UserPrincipal currentUser) {
-        FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
-        if (voucherCreateRequest.getPoints() >= 100 && voucherCreateRequest.getPoints() <= account.getFfpoints()) {
 
-            Voucher voucher = new Voucher("VOUCHER" + voucherRepository.findAll().size(), voucherCreateRequest.getPoints() / 100, true);
+
+        FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
+        double points = 0.0;
+        try{
+            points = voucherCreateRequest.getPoints();
+        }
+        catch (Exception e){
+            return new ResponseEntity(new ApiResponse(false, "points must be a number"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (points >= 10 && points <= account.getFfpoints()) {
+
+            Voucher voucher = new Voucher("VOUCHER" + voucherRepository.findAll().size(), voucherCreateRequest.getPoints()/100, true);
             voucher.setAccount(account);
             voucherRepository.save(voucher);
 
@@ -50,7 +61,7 @@ public class VoucherController {
             return new ResponseEntity(new ApiResponse(true, "Your Voucher Code is: " + voucher.getVoucherCode()),
                     HttpStatus.valueOf(200));
         } else {
-            return new ResponseEntity(new ApiResponse(false, "Your voucher points is less than 100 or it's greater than your current frequent flyer points"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ApiResponse(false, "Your voucher points is less than 10 or it's greater than your current frequent flyer points"), HttpStatus.valueOf(200));
         }
 
     }

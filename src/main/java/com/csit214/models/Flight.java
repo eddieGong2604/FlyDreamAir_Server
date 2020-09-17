@@ -1,6 +1,8 @@
 package com.csit214.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,6 +21,7 @@ public class Flight {
     private LocalDateTime arriveTime;
 
     @OneToMany(mappedBy = "flight")
+    @JsonIgnore
     private Set<Seating> seatingSet;
     public Flight() {
     }
