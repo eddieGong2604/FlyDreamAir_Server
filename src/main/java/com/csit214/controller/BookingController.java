@@ -40,11 +40,12 @@ public class BookingController {
         Seating seating = seatingRepository.findById(bookingRequest.getSeatingId()).orElse(null);
 
         Voucher voucher = voucherRepository.findByVoucherCode(bookingRequest.getVoucherCode()).orElse(null);
+        System.out.println(voucher == null);
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
         //if voucher code is not null but not found
         if (bookingRequest.getVoucherCode().length() > 0 && voucher == null) {
             return new ResponseEntity(new ApiResponse(false, "Voucher code is invalid!"),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.valueOf(200));
         } else {
             Booking booking = new Booking(seating.getPrice(), seating, account, voucher);
             //if
