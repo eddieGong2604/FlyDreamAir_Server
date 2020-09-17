@@ -49,12 +49,12 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.1.1</version>
+            <version>42.0.0</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
