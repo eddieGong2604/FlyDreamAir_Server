@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://flydreamair-react.herokuapp.com/")
+                .allowedOrigins("https://flydreamair-react.herokuapp.com")
                 .allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
                 .maxAge(MAX_AGE_SECS);
     }
