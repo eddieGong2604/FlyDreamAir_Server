@@ -78,7 +78,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.jpg",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js")
+                        "/**/*.js",
+                        "https://flydreamair-react.herokuapp.com/**",
+                        "https://flydreamair-react.herokuapp.com"
+                        )
                 .permitAll()
                 .antMatchers("/api/**")
                 .permitAll()
