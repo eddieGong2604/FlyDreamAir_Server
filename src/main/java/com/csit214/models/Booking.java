@@ -21,7 +21,7 @@ public class Booking {
     @JsonIgnore
     private FrequentFlyerAccount account;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "voucher_id", referencedColumnName = "voucherId")
     @Nullable
     private Voucher voucher;

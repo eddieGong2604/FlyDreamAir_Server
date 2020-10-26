@@ -13,11 +13,11 @@ import com.csit214.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/voucher")
@@ -38,17 +38,16 @@ public class VoucherController {
 
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
         double points = 0.0;
-        try{
+        try {
             points = voucherCreateRequest.getPoints();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(new ApiResponse(false, "points must be a number"),
                     HttpStatus.BAD_REQUEST);
         }
 
         if (points >= 10 && points <= account.getFfpoints()) {
 
-            Voucher voucher = new Voucher("VOUCHER" + voucherRepository.findAll().size(), voucherCreateRequest.getPoints()/100, true);
+            Voucher voucher = new Voucher("VOUCHER" + voucherRepository.findAll().size(), voucherCreateRequest.getPoints() / 100, true);
             voucher.setAccount(account);
             voucherRepository.save(voucher);
 
@@ -70,5 +69,17 @@ public class VoucherController {
     public Set<Voucher> getUserVoucher(@CurrentUser UserPrincipal currentUser) {
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
         return new HashSet<>(account.getVouchers());
+    }
+
+
+    @PostMapping("/valid/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+
+    public ResponseEntity<?> setVoucherValidity(@PathVariable Long id) {
+        Voucher voucher = voucherRepository.findById(id).orElse(null);
+        voucher.setValid(!voucher.isValid());
+        voucherRepository.save(voucher);
+        return new ResponseEntity(new ApiResponse(true, "Voucher Updated"), HttpStatus.valueOf(200));
+
     }
 }

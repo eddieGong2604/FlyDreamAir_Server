@@ -82,7 +82,8 @@ public class BookingController {
             bookingRepository.save(booking);
             userRepository.save(account);
             if(voucher != null){
-                voucherRepository.delete(voucher);
+                voucher.setValid(false);
+                voucherRepository.save(voucher);
             }
             return new ResponseEntity(new BookingInfoResponse(booking, initialPrice,bookingRequest.getVoucherCode(),priceAfter),
                     HttpStatus.valueOf(200));
@@ -98,5 +99,18 @@ public class BookingController {
         return new HashSet<>(account.getBookings());
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
 
+    public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
+        try{
+            bookingRepository.deleteById(id);
+            return new ResponseEntity(new ApiResponse(true, "delete sucessful"),
+                    HttpStatus.valueOf(200));
+        }
+        catch (Exception e){
+            return new ResponseEntity(new ApiResponse(false, "delete unsucessful"),
+                    HttpStatus.valueOf(200));
+        }
+    }
 }
