@@ -31,15 +31,12 @@ public class FrequentFlyerAccount {
     private FFType status;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Voucher> vouchers = new HashSet<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Booking> bookings = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
