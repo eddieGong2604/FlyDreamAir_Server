@@ -39,6 +39,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -136,9 +137,9 @@ public class AuthController {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.ACCEPTED);
         }
-        String passwordPlain = "admin" + userRepository.findAll().size();
+        String passwordPlain = "admin" + adminRequest.getName().trim(); ;
 
-        FrequentFlyerAccount user = new FrequentFlyerAccount(adminRequest.getEmail(), "Admin", email,
+        FrequentFlyerAccount user = new FrequentFlyerAccount("00000000", adminRequest.getName(), email,
                 passwordPlain, 0, FFType.SILVER, 0);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
@@ -146,7 +147,6 @@ public class AuthController {
         user.setRoles(Collections.singleton(userRole));
 
         //save admin to database
-        FrequentFlyerAccount result = userRepository.save(user);
         //send email to finalize admin registration
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -162,13 +162,15 @@ public class AuthController {
 
         try {
             javaMailSender.send(message);
+            userRepository.save(user);
+
         } catch (MailSendException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid email"));
 
         }
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
+                .buildAndExpand(user.getUsername()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User Admin registered successfully. Check your email for the password"));
 
