@@ -139,7 +139,7 @@ public class AuthController {
         }
         String passwordPlain = "admin" + adminRequest.getName().trim(); ;
 
-        FrequentFlyerAccount user = new FrequentFlyerAccount("00000000", adminRequest.getName(), email,
+        FrequentFlyerAccount user = new FrequentFlyerAccount("000" + userRepository.findAll().size(), adminRequest.getName(), email,
                 passwordPlain, 0, FFType.SILVER, 0);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
