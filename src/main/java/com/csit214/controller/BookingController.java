@@ -104,7 +104,17 @@ public class BookingController {
 
     public ResponseEntity<?> deleteBooking(@PathVariable Long id) {
         try{
+            Booking booking = bookingRepository.findById(id).orElse(null);
+            FrequentFlyerAccount frequentFlyerAccount =
+            booking.getAccount();
+
             bookingRepository.deleteById(id);
+            frequentFlyerAccount.setFfpoints(
+                    frequentFlyerAccount.getFfpoints() -
+                            booking.getBookingPrice()/25
+            );
+            userRepository.save(frequentFlyerAccount);
+
             return new ResponseEntity(new ApiResponse(true, "delete sucessful"),
                     HttpStatus.valueOf(200));
         }

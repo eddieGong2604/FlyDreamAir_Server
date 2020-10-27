@@ -36,6 +36,11 @@ public class FrequentFlyerAccount {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private Set<Booking> bookings = new HashSet<>();
 
+
+    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
+    private Set<Enquiry> enquiries = new HashSet<>();
+
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -145,4 +150,11 @@ public class FrequentFlyerAccount {
         this.status = status;
     }
 
+    public Set<Enquiry> getEnquiries() {
+        return enquiries;
+    }
+
+    public void setEnquiries(Set<Enquiry> enquiries) {
+        this.enquiries = enquiries;
+    }
 }

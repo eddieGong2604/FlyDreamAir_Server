@@ -109,7 +109,7 @@ public class AuthController {
         // Creating user's account
         //    public FrequentFlyerAccount(String passportNumber, String name, String username, String password, int ffpoints, FFType status, double statusDiscountPercent) {
         FrequentFlyerAccount user = new FrequentFlyerAccount(signUpRequest.getPassportNumber(), signUpRequest.getName(), signUpRequest.getUsername(),
-                signUpRequest.getPassword(), 0, FFType.SILVER, FFType.SILVER.getValue());
+                signUpRequest.getPassword(), 0, FFType.SILVER, 0);
         //still hard coded
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -154,7 +154,7 @@ public class AuthController {
         String mailContent = "<p> Thank you for your registration to be an admin of FlyDreamAir </p>" +
                 "<p>Here is the credentials to access the system admin dashboard </p>" +
                 "<p>Email: <b>" + email + "</b> </p>" + "<p>Password: <b>" + passwordPlain + "</b> </p>";
-        helper.setFrom("locphe03@gmail.com", "FlyDreamAir NoReply");
+        helper.setFrom("flydreamairaustralia@gmail.com", "FlyDreamAir");
         System.out.println(email);
         helper.setTo(email);
         helper.setSubject(mailSubject);

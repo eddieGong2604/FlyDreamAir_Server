@@ -3,6 +3,7 @@ package com.csit214.controller;
 import com.csit214.models.FrequentFlyerAccount;
 import com.csit214.models.Voucher;
 import com.csit214.payload.ApiResponse;
+import com.csit214.payload.RewardPayload;
 import com.csit214.payload.VoucherCreateRequest;
 import com.csit214.repository.BookingRepository;
 import com.csit214.repository.SeatingRepository;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -34,8 +36,6 @@ public class VoucherController {
 
     @PostMapping("/me")
     public ResponseEntity<?> makeVoucher(@RequestBody VoucherCreateRequest voucherCreateRequest, @CurrentUser UserPrincipal currentUser) {
-
-
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
         double points = 0.0;
         try {
@@ -72,7 +72,48 @@ public class VoucherController {
     }
 
 
-    @PostMapping("/valid/{id}")
+    @PostMapping("/reward")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> giveAwayReward(@RequestBody RewardPayload rewardPayload) {
+        if (rewardPayload.getUsername().trim().toLowerCase().equals("all")) {
+            List<FrequentFlyerAccount> accountList = userRepository.findAll();
+            accountList.forEach(
+                    (account) -> {
+                        Set<Voucher> vouchers = account.getVouchers();
+                        Voucher voucher = new Voucher("SYSTEM_GIFT_" + voucherRepository.findAll().size(),
+                                rewardPayload.getValue() / 100, true);
+                        voucher.setAccount(account);
+                        voucherRepository.save(voucher);
+                        vouchers.add(voucher);
+                        account.setVouchers(vouchers);
+                        userRepository.save(account);
+                    }
+
+            );
+            return new ResponseEntity(new ApiResponse(true, "Voucher sent out successfully"), HttpStatus.valueOf(200));
+        } else {
+            FrequentFlyerAccount account = userRepository.findByUsername(rewardPayload.getUsername()).orElse(null);
+            if (account == null) {
+                return new ResponseEntity(new ApiResponse(false, "username not found"), HttpStatus.valueOf(200));
+            } else if (rewardPayload.getValue() <= 0 && rewardPayload.getValue() > 100) {
+                return new ResponseEntity(new ApiResponse(false, "voucher value must be from 0 -> 100%"), HttpStatus.valueOf(200));
+            } else {
+                Voucher voucher = new Voucher("SYSTEM_GIFT_" + voucherRepository.findAll().size(), rewardPayload.getValue() / 100, true);
+                Set<Voucher> vouchers = account.getVouchers();
+                voucher.setAccount(account);
+                voucherRepository.save(voucher);
+                vouchers.add(voucher);
+                account.setVouchers(vouchers);
+                userRepository.save(account);
+                return new ResponseEntity(new ApiResponse(true, "Voucher sent out successfully"), HttpStatus.valueOf(200));
+            }
+        }
+
+
+    }
+
+
+    @PostMapping("/reward/{id}")
     @PreAuthorize("hasRole('ADMIN')")
 
     public ResponseEntity<?> setVoucherValidity(@PathVariable Long id) {
@@ -82,4 +123,5 @@ public class VoucherController {
         return new ResponseEntity(new ApiResponse(true, "Voucher Updated"), HttpStatus.valueOf(200));
 
     }
+
 }

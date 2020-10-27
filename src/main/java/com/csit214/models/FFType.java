@@ -1,8 +1,8 @@
 package com.csit214.models;
 
 public enum FFType {
-    PLATINUM(60.0,500),
-    GOLD(40.0,200),
+    PLATINUM(60.0,100),
+    GOLD(40.0,50),
     SILVER(10.0,0);
     private double value;
     private double threshold;
