@@ -129,7 +129,7 @@ public class TestPayload {
 
     public String getI() {
         return i;
-
+    }
 
     public void setI(String i) {
         this.i = i;
