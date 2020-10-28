@@ -120,6 +120,13 @@ public class VoucherController {
         Voucher voucher = voucherRepository.findById(id).orElse(null);
         voucher.setValid(!voucher.isValid());
         voucherRepository.save(voucher);
+
+        FrequentFlyerAccount account = voucher.getAccount();
+        Set<Voucher> vouchers = account.getVouchers();
+        vouchers.add(voucher);
+        account.setVouchers(vouchers);
+
+        userRepository.save(account);
         return new ResponseEntity(new ApiResponse(true, "Voucher Updated"), HttpStatus.valueOf(200));
 
     }
