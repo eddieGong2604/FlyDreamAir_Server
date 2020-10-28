@@ -118,14 +118,14 @@ public class VoucherController {
 
     public ResponseEntity<?> setVoucherValidity(@PathVariable Long id) {
         Voucher voucher = voucherRepository.findById(id).orElse(null);
-        voucher.setValid(!voucher.isValid());
-        voucherRepository.save(voucher);
 
         FrequentFlyerAccount account = voucher.getAccount();
         Set<Voucher> vouchers = account.getVouchers();
+        vouchers.remove(voucher);
+        voucher.setValid(!voucher.isValid());
         vouchers.add(voucher);
+        voucherRepository.save(voucher);
         account.setVouchers(vouchers);
-
         userRepository.save(account);
         return new ResponseEntity(new ApiResponse(true, "Voucher Updated"), HttpStatus.valueOf(200));
 
