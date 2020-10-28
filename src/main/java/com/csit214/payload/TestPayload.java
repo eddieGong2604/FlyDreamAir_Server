@@ -132,6 +132,6 @@ public class TestPayload {
     }
 
     public void setI(String i) {
-        this.i = i;
+        this.i = i
     }
 }
