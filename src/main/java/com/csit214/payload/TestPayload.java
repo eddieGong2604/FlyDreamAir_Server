@@ -127,7 +127,7 @@ public class TestPayload {
         this.h = h;
     }
 
-    public String getI() {
+    public String getI()
         return i;
     }
 
