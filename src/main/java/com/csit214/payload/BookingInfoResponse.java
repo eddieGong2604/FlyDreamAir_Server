@@ -8,14 +8,19 @@ public class BookingInfoResponse {
     private double initialPrice;
     private String voucherCode;
     private double afterPrice;
+    private double statusPointsAdded;
+    private double ffpointsAdded;
 
+    public BookingInfoResponse() {
+    }
 
-    public BookingInfoResponse(Booking booking, double initialPrice, String voucherCode, double afterPrice) {
+    public BookingInfoResponse(Booking booking, double initialPrice, String voucherCode, double afterPrice, double statusPointsAdded, double ffpointsAdded) {
         this.booking = booking;
         this.initialPrice = initialPrice;
         this.voucherCode = voucherCode;
         this.afterPrice = afterPrice;
-
+        this.statusPointsAdded = statusPointsAdded;
+        this.ffpointsAdded = ffpointsAdded;
     }
 
 
@@ -49,5 +54,21 @@ public class BookingInfoResponse {
 
     public void setAfterPrice(double afterPrice) {
         this.afterPrice = afterPrice;
+    }
+
+    public double getStatusPointsAdded() {
+        return statusPointsAdded;
+    }
+
+    public void setStatusPointsAdded(double statusPointsAdded) {
+        this.statusPointsAdded = statusPointsAdded;
+    }
+
+    public double getFfpointsAdded() {
+        return ffpointsAdded;
+    }
+
+    public void setFfpointsAdded(double ffpointsAdded) {
+        this.ffpointsAdded = ffpointsAdded;
     }
 }

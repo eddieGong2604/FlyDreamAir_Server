@@ -67,8 +67,11 @@ public class BookingController {
             userBooking.add(booking);
             account.setBookings(userBooking);
 
-            double newStatusPoints = booking.getBookingPrice()*1.0/25 + account.getStatusPoints();
-            double newFFPoints = account.getFfpoints() + booking.getBookingPrice()*1.0/25 + account.getStatus().getValue();
+            double statusPointsAdded = booking.getBookingPrice()*1.0/25;
+            double newStatusPoints = statusPointsAdded + account.getStatusPoints();
+
+            double ffpointsAdded = booking.getBookingPrice()*1.0/25 + account.getStatus().getValue();
+            double newFFPoints = account.getFfpoints() + ffpointsAdded;
 
             account.setStatusPoints(newStatusPoints);
             account.setFfpoints(newFFPoints);
@@ -85,7 +88,7 @@ public class BookingController {
                 voucher.setValid(false);
                 voucherRepository.save(voucher);
             }
-            return new ResponseEntity(new BookingInfoResponse(booking, initialPrice,bookingRequest.getVoucherCode(),priceAfter),
+            return new ResponseEntity(new BookingInfoResponse(booking, initialPrice,bookingRequest.getVoucherCode(),priceAfter, statusPointsAdded, ffpointsAdded),
                     HttpStatus.valueOf(200));
         }
     }
