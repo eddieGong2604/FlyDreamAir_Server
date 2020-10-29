@@ -13,4 +13,11 @@ public class HomeController {
                 "<h3>Access the app <a href='https://flydreamair-react.herokuapp.com/'> here</a></h3>"+
                 "</div>";
     }
+
+    @RequestMapping("/error")
+    public String error(){
+        return "<div>" +
+                "<h2>Request rejected</h2>" +
+                "</div>";
+    }
 }
