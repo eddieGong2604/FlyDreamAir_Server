@@ -132,7 +132,10 @@ public class AuthController {
     @PostMapping("/signupadmin")
     public ResponseEntity<?> registerAdmin(@RequestBody AdminRequest adminRequest) throws MessagingException, UnsupportedEncodingException {
         String email = adminRequest.getEmail();
-        System.out.println(email);
+        if(!email.split("@")[1].startsWith("uowmail")){
+            return new ResponseEntity(new ApiResponse(false, "Invalid Email. \n You must be a student of UOW to be the administrators!"),
+                    HttpStatus.ACCEPTED);
+        }
         if (userRepository.existsByUsername(email)) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.ACCEPTED);
