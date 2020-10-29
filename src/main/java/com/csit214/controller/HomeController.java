@@ -85,10 +85,4 @@ public class HomeController {
                 "</html>";
     }
 
-    @RequestMapping("/error")
-    public String error(){
-        return "<div>" +
-                "<h2>Request rejected</h2>" +
-                "</div>";
-    }
 }
