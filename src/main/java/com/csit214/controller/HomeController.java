@@ -8,6 +8,9 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home(){
-        return "FlyDreamAir Server is successfully initiated";
+        return "<div>" +
+                "<h2>FlyDreamAir Server is successfully initiated</h2>" +
+                "<h3>Access the app <a href='https://flydreamair-react.herokuapp.com/'> here</a></h3>"+
+                "</div>";
     }
 }
