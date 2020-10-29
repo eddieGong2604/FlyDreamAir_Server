@@ -132,7 +132,7 @@ public class AuthController {
     @PostMapping("/signupadmin")
     public ResponseEntity<?> registerAdmin(@RequestBody AdminRequest adminRequest) throws MessagingException, UnsupportedEncodingException {
         String email = adminRequest.getEmail();
-        if(!(email.split("@").length < 2)){
+        if(!(email.split("@").length < 1)){
             return new ResponseEntity(new ApiResponse(false, "Invalid Email."),
                     HttpStatus.ACCEPTED);
         }
