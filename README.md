@@ -19,10 +19,7 @@ The project is built as an assessment deliverable for subject CSIT214 IT Project
 - Reece Walker (Business Analyst)
 
 ## Getting Started
-
-Initilize the Server first at [FlyDreamAir server](https://flydreamair-react.herokuapp.com/).
-
-When the White Label Message is returned, the app is ready to access at [FlyDreamAir client](https://flydreamair-react.herokuapp.com/).
+The app is ready to access at [FlyDreamAir](https://flydreamair-boot.herokuapp.com/).
 
 
 ## SERVER CREDIT
