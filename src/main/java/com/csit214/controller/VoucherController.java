@@ -40,9 +40,13 @@ public class VoucherController {
         double points = 0.0;
         try {
             points = voucherCreateRequest.getPoints();
+            if(points <= 0 || points > 100 ){
+                  return new ResponseEntity(new ApiResponse(false, "points must be a number between 0 and 100"),
+                        HttpStatus.valueOf(200));
+            }
         } catch (Exception e) {
-            return new ResponseEntity(new ApiResponse(false, "points must be a number"),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ApiResponse(false, "points must be a number between 0 and 100"),
+                    HttpStatus.valueOf(200));
         }
 
         if (points >= 10 && points <= account.getFfpoints()) {
@@ -75,6 +79,12 @@ public class VoucherController {
     @PostMapping("/reward")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> giveAwayReward(@RequestBody RewardPayload rewardPayload) {
+        if(rewardPayload.getValue() <= 0 || rewardPayload.getValue() > 100 ){
+            return new ResponseEntity(new ApiResponse(false, "value must be a number between 0 and 100"),
+                    HttpStatus.valueOf(200));
+        }
+
+
         if (rewardPayload.getUsername().trim().toLowerCase().equals("all")) {
             List<FrequentFlyerAccount> accountList = userRepository.findAll();
             accountList.forEach(

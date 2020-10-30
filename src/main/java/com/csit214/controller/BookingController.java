@@ -51,6 +51,7 @@ public class BookingController {
             //if
             double initialPrice = 0;
             double priceAfter = 0;
+
             if (voucher != null && bookingRequest.getVoucherCode().length() > 0) {
                 initialPrice = booking.getBookingPrice();
                 booking.applyVoucherCode(voucher, seating);
