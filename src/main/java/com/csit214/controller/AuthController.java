@@ -137,8 +137,8 @@ public class AuthController {
                     HttpStatus.ACCEPTED);
         }
 
-        if(!email.split("@")[1].startsWith("uowmail")){
-            return new ResponseEntity(new ApiResponse(false, "Unauthorized Email. \n You must be a student of UOW to be the administrator!"),
+        if(!email.split("@")[1].startsWith("uow")){
+            return new ResponseEntity(new ApiResponse(false, "Unauthorized Email. \n You must be a member of UOW to be the administrator!"),
                     HttpStatus.ACCEPTED);
         }
         if (userRepository.existsByUsername(email)) {
