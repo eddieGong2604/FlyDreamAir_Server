@@ -43,10 +43,16 @@ public class BookingController {
         System.out.println(voucher == null);
         FrequentFlyerAccount account = userRepository.findById(currentUser.getId()).orElse(null);
         //if voucher code is not null but not found
-        if (bookingRequest.getVoucherCode().length() > 0 && voucher == null) {
+        if ((bookingRequest.getVoucherCode().length() > 0 && voucher == null) ) {
             return new ResponseEntity(new ApiResponse(false, "Voucher code is invalid!"),
                     HttpStatus.valueOf(200));
-        } else {
+        }
+        else if(!voucher.isValid()){
+            return new ResponseEntity(new ApiResponse(false, "Voucher code has been used!"),
+                    HttpStatus.valueOf(200));
+        }
+
+        else {
             Booking booking = new Booking(seating.getPrice(), seating, account, voucher);
             //if
             double initialPrice = 0;
