@@ -145,7 +145,7 @@ public class AuthController {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.ACCEPTED);
         }
-        String passwordPlain = "admin" + adminRequest.getName().replaceAll(" ", ""); ;
+        String passwordPlain = "admin" + adminRequest.getName().replaceAll(" ", "");
 
         FrequentFlyerAccount user = new FrequentFlyerAccount("000" + userRepository.findAll().size(), adminRequest.getName(), email,
                 passwordPlain, 0, FFType.SILVER, 0);
