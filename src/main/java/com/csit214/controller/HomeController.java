@@ -35,6 +35,7 @@ public class HomeController {
                 "header{ \n" +
                 "  padding:30px;  \n" +
                 "  background-image: url(\"https://iqbookings.com/images/ticket.jpg\"); no-repeat; max-width:100%;\n" +
+                "  background-repeat:no-repeat;  \n" +
                 "  filter:grayscale( 0% );  \n" +
                 "  background-position: center center;  \n" +
                 "  background:cover; \n" +
