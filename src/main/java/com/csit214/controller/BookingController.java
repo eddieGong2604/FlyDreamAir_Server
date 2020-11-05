@@ -47,7 +47,7 @@ public class BookingController {
             return new ResponseEntity(new ApiResponse(false, "Voucher code is invalid!"),
                     HttpStatus.valueOf(200));
         }
-        if(!voucher.isValid()){
+        if( voucher != null && !voucher.isValid()){
             return new ResponseEntity(new ApiResponse(false, "Voucher code has been used!"),
                     HttpStatus.valueOf(200));
         }
